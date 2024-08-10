@@ -38,13 +38,13 @@ public class MemberService {
 
     //회원 조회
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     //회원 수정
     @Transactional
     public void update(Long id, String studentId, String name, String pw, String major, boolean admin) {
-        Member member = memberRepository.findOne(id);
+        Member member = memberRepository.findById(id).get();
         member.setStudentId(studentId);
         member.setName(name);
         member.setPw(pw);
