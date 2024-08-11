@@ -2,13 +2,11 @@ package daenamoo.homepage.api;
 
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.service.MemberService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,10 +30,16 @@ public class MemberApiController {
 
     @GetMapping("/members/{id}")
     public Result findMember(
-        @PathVariable("id") Long id
+            @PathVariable("id") Long id
     ) {
         Member findMember = memberService.findOne(id);
-        MemberDto memberDto = new MemberDto(findMember.getStudentId(), findMember.getName(), findMember.getMajor(), findMember.isAdmin());
+        MemberDto memberDto = new MemberDto(
+                findMember.getStudentId(),
+                findMember.getName(),
+                findMember.getMajor(),
+                findMember.isAdmin()
+        );
+
         return new Result(memberDto);
     }
 
