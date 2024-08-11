@@ -1,12 +1,12 @@
 package daenamoo.homepage.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -21,4 +21,13 @@ public class Member {
     private String pw;
     private String major;
     private boolean admin;
+
+    @OneToMany(mappedBy = "member")
+    private List<Award> awords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberStudy> studies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<LibraryPost> libraryPosts = new ArrayList<>();
 }
