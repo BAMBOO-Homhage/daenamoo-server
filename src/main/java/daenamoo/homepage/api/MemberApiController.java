@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static daenamoo.homepage.api.ResultDto.*;
+
 @RestController
 @RequiredArgsConstructor
 public class MemberApiController {
@@ -43,11 +45,7 @@ public class MemberApiController {
         return new Result(memberDto);
     }
 
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private T data;
-    }
+
 
     @Data
     @AllArgsConstructor

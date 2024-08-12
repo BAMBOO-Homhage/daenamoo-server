@@ -26,4 +26,5 @@ public class Study {
     @OneToMany(mappedBy = "study")
     private List<Inventory> inventories = new ArrayList<>();
 
+
 }
