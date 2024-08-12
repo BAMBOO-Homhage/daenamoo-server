@@ -45,4 +45,16 @@ public class MemberServiceTest {
         //then
         Assertions.fail("예외가 발생해야 한다.");
     }
+
+    @Test
+    public void 회원_수정() throws Exception {
+        //given
+        Member member = new Member();
+        member.setName("kim");
+        //when
+        memberService.join(member);
+        memberService.update(member.getId(), "202010766", "kkiimm", "kimkim", "휴먼", true);
+        //then
+        Assertions.assertEquals("kkiimm", member.getName());
+    }
 }

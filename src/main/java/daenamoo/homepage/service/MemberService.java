@@ -45,10 +45,6 @@ public class MemberService {
     @Transactional
     public void update(Long id, String studentId, String name, String pw, String major, boolean admin) {
         Member member = memberRepository.findById(id).get();
-        member.setStudentId(studentId);
-        member.setName(name);
-        member.setPw(pw);
-        member.setMajor(major);
-        member.setAdmin(admin);
+        member.update(studentId, name, pw, major, admin);
     }
 }
