@@ -1,6 +1,7 @@
 package daenamoo.homepage.api;
 
 import daenamoo.homepage.domain.Member;
+import daenamoo.homepage.domain.MemberStudy;
 import daenamoo.homepage.domain.Study;
 import daenamoo.homepage.service.StudyService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ public class StudyApiController {
 
     private final StudyService studyService;
 
+    //스터디 생성 API
     @PostMapping("/studies/new")
     public ResponseEntity<String> createStudy(@Valid @RequestBody Study study) {
         try {
@@ -33,6 +35,7 @@ public class StudyApiController {
         }
     }
 
+    //스터디 전체 목록 조회 API
     @GetMapping("/studies")
     public Result findStudies() {
         List<Study> studies = studyService.findStudies();
@@ -43,6 +46,7 @@ public class StudyApiController {
         return new Result(collect);
     }
 
+    //특정 스터디 조회 API
     @GetMapping("/studies/{id}")
     public Result findStudy(
             @PathVariable("id") Long id
@@ -59,6 +63,33 @@ public class StudyApiController {
         return new Result(studyDto);
     }
 
+    //스터디에 회원 추가 API
+    @PostMapping("/studies/{studyId}/members/{memberId}")
+    public ResponseEntity<String> addStudyMember(
+            @PathVariable("studyId") Long studyId,
+            @PathVariable("memberId") Long memberId
+    ) {
+        Long memberStudyId = studyService.addMember(studyId, memberId);
+        if (memberStudyId == null) {
+            return ResponseEntity.ok("회원 추가 실패");
+        }
+        return ResponseEntity.ok("Member added to study successfully");
+    }
+
+    //스터디에 소속된 멤버 조회 API
+    @GetMapping("/studies/{id}/members")
+    public Result findStudyMembers(
+            @PathVariable("id") Long id
+    ) {
+        Study study = studyService.findStudy(id);
+        List<MemberStudyDto> collect = study.getMemberStudies().stream()
+                .map(ms -> new MemberStudyDto(ms.getMember().getName(), ms.getO_count(), ms.getX_count()))
+                .collect(Collectors.toList());
+        StudyMemberDto smDto = new StudyMemberDto(study.getId(), study.getName(), collect);
+
+        return new Result(smDto);
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -69,5 +100,21 @@ public class StudyApiController {
         private int totalStudyCount;
         private int studyCount;
         private boolean isBook;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class StudyMemberDto {
+        private Long id;
+        private String name;
+        List<MemberStudyDto> memberStudies;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberStudyDto {
+        private String memberName;
+        private int o_count;
+        private int x_count;
     }
 }

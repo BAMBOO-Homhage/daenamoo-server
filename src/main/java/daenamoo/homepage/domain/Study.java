@@ -21,10 +21,14 @@ public class Study {
     private boolean is_book;
 
     @OneToMany(mappedBy = "study")
-    private List<MemberStudy> members = new ArrayList<>();
+    private List<MemberStudy> memberStudies = new ArrayList<>();
 
     @OneToMany(mappedBy = "study")
     private List<Inventory> inventories = new ArrayList<>();
 
-
+    //연관관계 메서드
+    public void addMemberStudy(MemberStudy memberStudy) {
+        memberStudies.add(memberStudy);
+        memberStudy.setStudy(this);
+    }
 }

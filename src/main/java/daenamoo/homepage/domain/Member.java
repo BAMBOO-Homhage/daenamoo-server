@@ -25,8 +25,14 @@ public class Member {
     private List<Award> awords = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<MemberStudy> studies = new ArrayList<>();
+    private List<MemberStudy> memberStudies = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<LibraryPost> libraryPosts = new ArrayList<>();
+
+    //연관관계 메서드
+    public void addMemberStudy(MemberStudy memberStudy) {
+        memberStudies.add(memberStudy);
+        memberStudy.setMember(this);
+    }
 }
