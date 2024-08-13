@@ -83,7 +83,7 @@ public class StudyApiController {
     ) {
         Study study = studyService.findStudy(id);
         List<MemberStudyDto> collect = study.getMemberStudies().stream()
-                .map(ms -> new MemberStudyDto(ms.getMember().getName(), ms.getO_count(), ms.getX_count()))
+                .map(ms -> new MemberStudyDto(ms.getMember().getName(), ms.getOCount(), ms.getXCount()))
                 .collect(Collectors.toList());
         StudyMemberDto smDto = new StudyMemberDto(study.getId(), study.getName(), collect);
 

@@ -1,6 +1,7 @@
 package daenamoo.homepage.api;
 
 import daenamoo.homepage.domain.Member;
+import daenamoo.homepage.domain.MemberStudy;
 import daenamoo.homepage.domain.Study;
 import daenamoo.homepage.service.MemberService;
 import jakarta.persistence.EntityNotFoundException;
@@ -75,6 +76,20 @@ public class MemberApiController {
         }
     }
 
+    //멤버의 스터디 조회
+    @GetMapping("/members/{id}/studies")
+    public Result findStudyInMember(
+            @PathVariable("id") Long id
+    ) {
+        Member findMember = memberService.findOne(id);
+        List<MemberStudy> studies = memberService.findOneStudies(findMember.getId());
+
+        List<MemberStudyDto> collect = studies.stream()
+                .map(ms -> new MemberStudyDto(ms.getStudy().getName(), ms.getOCount(), ms.getXCount()))
+                .collect(Collectors.toList());
+
+        return new Result(collect);
+    }
 
     @Data
     @AllArgsConstructor
@@ -83,5 +98,13 @@ public class MemberApiController {
         private String name;
         private String major;
         private boolean admin;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberStudyDto {
+        private String name;
+        private int oCount;
+        private int xCount;
     }
 }

@@ -21,8 +21,8 @@ public class MemberStudy {
     @JoinColumn(name = "study_id")
     private Study study;
 
-    private int o_count = 0;
-    private int x_count = 0;
+    private int oCount = 0;
+    private int xCount = 0;
 
     public void setMember(Member member) {
         this.member = member;
@@ -38,18 +38,18 @@ public class MemberStudy {
     }
 
     public void addOcount() {
-        this.o_count += 1;
+        this.oCount += 1;
     }
 
     public void addXcount() {
-        this.x_count += 1;
+        this.xCount += 1;
     }
 
     public double attendanceRate() {
-        int total = o_count + x_count;
+        int total = oCount + xCount;
         if (total == 0){
             throw new IllegalArgumentException("출석률을 계산할 수 없습니다.");
         }
-        return (double) o_count / total * 100;
+        return (double) oCount / total * 100;
     }
 }
