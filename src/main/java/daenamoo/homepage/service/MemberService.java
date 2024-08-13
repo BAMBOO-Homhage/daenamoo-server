@@ -1,6 +1,8 @@
 package daenamoo.homepage.service;
 
 import daenamoo.homepage.domain.Member;
+import daenamoo.homepage.domain.MemberStudy;
+import daenamoo.homepage.domain.Study;
 import daenamoo.homepage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,5 +48,11 @@ public class MemberService {
     public void update(Long id, String studentId, String name, String pw, String major, boolean admin) {
         Member member = memberRepository.findById(id).get();
         member.update(studentId, name, pw, major, admin);
+    }
+
+    //회원의 스터디 조회
+    public List<MemberStudy> findOneStudies(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        return member.getMemberStudies();
     }
 }

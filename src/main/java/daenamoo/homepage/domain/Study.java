@@ -26,6 +26,13 @@ public class Study {
     @OneToMany(mappedBy = "study")
     private List<Inventory> inventories = new ArrayList<>();
 
+    public void setName(String name) {
+        if (this.name != null && this.name.equals(name)) {
+            throw new IllegalStateException("중복된 스터디 이름입니다.");
+        }
+        this.name = name;
+    }
+
     //연관관계 메서드
     public void addMemberStudy(MemberStudy memberStudy) {
         memberStudies.add(memberStudy);
