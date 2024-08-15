@@ -1,5 +1,5 @@
 package daenamoo.homepage.domain;
 
 public enum AuthType {
-    USER, MANAGER, MASTER
+    ROLE_USER, ROLE_MANAGER, ROLE_MASTER
 }

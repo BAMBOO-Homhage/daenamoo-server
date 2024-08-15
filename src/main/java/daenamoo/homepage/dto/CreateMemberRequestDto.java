@@ -35,7 +35,8 @@ public class CreateMemberRequestDto {
                 .major(major)
                 .email(email)
                 .phoneNumber(phoneNumber)
-                .authType(AuthType.USER)
+                .authType(AuthType.ROLE_USER)
+                .Role("USER")
                 .build();
     }
 }

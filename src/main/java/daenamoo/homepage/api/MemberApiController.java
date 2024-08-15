@@ -75,11 +75,12 @@ public class MemberApiController {
 
         // JWT 토큰 생성
         String accessToken = jwtUtil.tokenProvider(userDetails, expiration);
+        String refreshToken = jwtUtil.createJwtRefreshToken(userDetails);
 
         // JWT DTO 생성
         JwtDto jwtDto = JwtDto.builder()
                 .accessToken(accessToken)
-                .refreshToken("생성된 리프레시 토큰 (만약 필요하다면)")
+                .refreshToken(refreshToken)
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(jwtDto);
