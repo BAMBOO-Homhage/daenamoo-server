@@ -1,14 +1,18 @@
 package daenamoo.homepage.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Getter
+@Builder
 public class Post {
 
     @Id @GeneratedValue
@@ -27,4 +31,10 @@ public class Post {
 
     private LocalDateTime createAt;
     private boolean isNotice;
+
+    // 게시글 수정
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }

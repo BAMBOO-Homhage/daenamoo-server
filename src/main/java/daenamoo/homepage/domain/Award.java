@@ -12,7 +12,7 @@ import static jakarta.persistence.FetchType.*;
 public class Award {
 
     @Id @GeneratedValue
-    @Column(name = "aword_id")
+    @Column(name = "award_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
