@@ -3,17 +3,16 @@ package daenamoo.homepage.api;
 import daenamoo.homepage.auth.userDetails.CustomUserDetails;
 import daenamoo.homepage.auth.dto.JwtDto;
 import daenamoo.homepage.auth.util.JwtUtil;
-import daenamoo.homepage.domain.AuthType;
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.MemberStudy;
-import daenamoo.homepage.dto.CreateMemberRequestDto;
-import daenamoo.homepage.dto.LoginRequestDto;
+import daenamoo.homepage.dto.request.CreateMemberRequestDto;
+import daenamoo.homepage.dto.request.LoginRequestDto;
+import daenamoo.homepage.dto.response.MemberResponseDto;
+import daenamoo.homepage.dto.response.MemberStudyResponseDto;
 import daenamoo.homepage.repository.MemberRepository;
 import daenamoo.homepage.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static daenamoo.homepage.api.ResultDto.*;
 
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class MemberApiController {
 
     @Operation(method = "POST",
             summary = "회원가입",
-            description = "회원가입API입니다. CreateMemberRequestDto 형태로 RequestBody에 담아서 요청합니다.")
+            description = "회원가입 API입니다. CreateMemberRequestDto 형태로 RequestBody에 담아서 요청합니다.")
     @PostMapping("/signup")
     public ResponseEntity<String> createUser(@Valid @RequestBody CreateMemberRequestDto createUserRequestDto) {
 
@@ -86,40 +86,41 @@ public class MemberApiController {
         return ResponseEntity.status(HttpStatus.OK).body(jwtDto);
     }
 
+    // 인증 테스트 APi - 삭제 예정
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.status(HttpStatus.OK).body("테스트 성공했습니다.");
     }
 
-    //멤버 전체 조회 API
-    @GetMapping("/members")
+    @Operation(method = "GET",
+            summary = "멤버 조회",
+            description = "멤버 전체를 조회합니다. header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("")
     public Result findMembers() {
         List<Member> findMembers = memberService.findMembers();
-        List<MemberDto> collect = findMembers.stream()
-                .map(m -> new MemberDto(m.getStudentId(), m.getName(), m.getMajor(), m.getAuthType()))
+        List<MemberResponseDto> collect = findMembers.stream()
+                .map(m -> new MemberResponseDto(m)) // MemberDto 구성은 추후 변경 가능
                 .collect(Collectors.toList());
 
         return new Result(collect);
     }
 
     //멤버 조회 API
-    @GetMapping("/members/{id}")
+    @Operation(method = "GET",
+            summary = "특정 멤버 조회",
+            description = "멤버 한명을 조회합니다. header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("/{id}")
     public Result findMember(
             @PathVariable("id") Long id
     ) {
         Member findMember = memberService.findOne(id);
-        MemberDto memberDto = new MemberDto(
-                findMember.getStudentId(),
-                findMember.getName(),
-                findMember.getMajor(),
-                findMember.getAuthType()
-        );
+        MemberResponseDto memberDto = new MemberResponseDto(findMember);
 
         return new Result(memberDto);
     }
 
-    //멤버 수정 API
-//    @PatchMapping("/members/{id}")
+    //멤버 수정 API     // 무엇을 수정 가능하게 해야 하는가.. 비밀번호, 전공, 이름, 이메일, 전화번호..?
+//    @PatchMapping("/")
 //    public ResponseEntity<String> updateMember(
 //            @Valid @RequestBody Member member,
 //            @PathVariable("id") Long id
@@ -144,34 +145,20 @@ public class MemberApiController {
 //    }
 
     //멤버의 스터디 조회
-    @GetMapping("/members/{id}/studies")
+    @Operation(method = "GET",
+            summary = "특정 특정의 스터디 조회",
+            description = "멤버 한명의 스터디를 조회합니다. header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("/{id}/studies")
     public Result findStudyInMember(
             @PathVariable("id") Long id
     ) {
         Member findMember = memberService.findOne(id);
         List<MemberStudy> studies = memberService.findOneStudies(findMember.getId());
 
-        List<MemberStudyDto> collect = studies.stream()
-                .map(ms -> new MemberStudyDto(ms.getStudy().getName(), ms.getOCount(), ms.getXCount()))
+        List<MemberStudyResponseDto> collect = studies.stream()
+                .map(ms -> new MemberStudyResponseDto(ms))
                 .collect(Collectors.toList());
 
         return new Result(collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MemberDto {
-        private String studentId;
-        private String name;
-        private String major;
-        private AuthType authType;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MemberStudyDto {
-        private String name;
-        private int oCount;
-        private int xCount;
     }
 }

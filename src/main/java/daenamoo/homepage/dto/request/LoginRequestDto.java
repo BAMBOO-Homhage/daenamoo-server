@@ -1,4 +1,4 @@
-package daenamoo.homepage.dto;
+package daenamoo.homepage.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

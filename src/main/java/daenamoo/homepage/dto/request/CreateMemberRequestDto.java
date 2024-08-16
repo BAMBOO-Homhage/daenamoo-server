@@ -1,4 +1,4 @@
-package daenamoo.homepage.dto;
+package daenamoo.homepage.dto.request;
 
 import daenamoo.homepage.domain.AuthType;
 import daenamoo.homepage.domain.Member;

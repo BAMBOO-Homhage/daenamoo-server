@@ -2,8 +2,7 @@ package daenamoo.homepage.service;
 
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.MemberStudy;
-import daenamoo.homepage.domain.Study;
-import daenamoo.homepage.dto.CreateMemberRequestDto;
+import daenamoo.homepage.dto.request.CreateMemberRequestDto;
 import daenamoo.homepage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

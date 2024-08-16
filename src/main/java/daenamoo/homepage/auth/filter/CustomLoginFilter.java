@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import daenamoo.homepage.auth.userDetails.CustomUserDetails;
 import daenamoo.homepage.auth.dto.JwtDto;
 import daenamoo.homepage.auth.util.JwtUtil;
-import daenamoo.homepage.dto.LoginRequestDto;
+import daenamoo.homepage.dto.request.LoginRequestDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
