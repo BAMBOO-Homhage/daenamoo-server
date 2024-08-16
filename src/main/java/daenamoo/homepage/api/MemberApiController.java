@@ -40,7 +40,7 @@ public class MemberApiController {
 
     @Operation(method = "POST",
             summary = "회원가입",
-            description = "회원가입API입니다. CreateUserRequestDto 형태로 RequestBody에 담아서 요청합니다.")
+            description = "회원가입API입니다. CreateMemberRequestDto 형태로 RequestBody에 담아서 요청합니다.")
     @PostMapping("/signup")
     public ResponseEntity<String> createUser(@Valid @RequestBody CreateMemberRequestDto createUserRequestDto) {
 
