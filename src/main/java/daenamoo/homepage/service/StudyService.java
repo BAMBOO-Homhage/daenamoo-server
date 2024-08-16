@@ -3,6 +3,7 @@ package daenamoo.homepage.service;
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.MemberStudy;
 import daenamoo.homepage.domain.Study;
+import daenamoo.homepage.dto.request.CreateStudyRequestDto;
 import daenamoo.homepage.repository.MemberRepository;
 import daenamoo.homepage.repository.MemberStudyRepository;
 import daenamoo.homepage.repository.StudyRepository;
@@ -33,7 +34,8 @@ public class StudyService {
 
     //스터디 생성
     @Transactional
-    public Long createStudy(Study study) {
+    public Long createStudy(CreateStudyRequestDto createStudyRequestDto) {
+        Study study = createStudyRequestDto.toEntity();
         studyRepository.save(study);
         return study.getId();
     }
