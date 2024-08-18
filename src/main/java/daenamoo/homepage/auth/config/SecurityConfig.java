@@ -32,6 +32,7 @@ public class SecurityConfig {
             "/api/members/signup",
             "/auth/reissue",
             "/swagger-ui/**",
+            "/v3/api-docs/**",
     };
 
     @Bean
@@ -79,9 +80,9 @@ public class SecurityConfig {
         http
                 .logout((configurer) ->
                         configurer
-                                .logoutUrl("/api/user/logout")
+                                .logoutUrl("/api/members/logout")
                                 .deleteCookies("JSESSIONID")
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/api/user/logout"))
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/api/members/logout"))
 
                 );
 
@@ -92,7 +93,7 @@ public class SecurityConfig {
 
 
         // Login Filter URL 지정
-        loginFilter.setFilterProcessesUrl("/api/user/login");
+        loginFilter.setFilterProcessesUrl("/api/members/login");
 
         // filter chain 에 login filter 등록
         http
