@@ -1,5 +1,5 @@
 package daenamoo.homepage.domain;
 
-public enum Date {
+public enum Day {
     MON, TUE, WEN, TUR, FRI
 }
