@@ -161,4 +161,67 @@ public class MemberApiController {
 
         return new Result(collect);
     }
+
+    // 멤버 권한 변경 API - USER
+    @Operation(method = "PACTH",
+            summary = "멤버의 권한을 USER로 변경",
+            description = "header에 accessToken을 넣어 요청하면 응답합니다.")
+    @PatchMapping("/{id}/role/user")
+    public ResponseEntity<String> changeRoleUser(
+            @PathVariable("id") Long id
+    ) {
+        try {
+            Member findMember = memberService.findOne(id);
+            if (findMember == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 ID의 멤버를 찾을 수 없습니다.");
+            }
+
+            memberService.changeRoleUser(id);
+            return ResponseEntity.status(HttpStatus.OK).body("USER로 권한이 변경되었습니다");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("권한 변경 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 멤버 권한 변경 API - MANAGER
+    @Operation(method = "PACTH",
+            summary = "멤버의 권한을 MANAGER로 변경",
+            description = "header에 accessToken을 넣어 요청하면 응답합니다.")
+    @PatchMapping("/{id}/role/manager")
+    public ResponseEntity<String> changeRoleManager(
+            @PathVariable("id") Long id
+    ) {
+        try {
+            Member findMember = memberService.findOne(id);
+            if (findMember == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 ID의 멤버를 찾을 수 없습니다.");
+            }
+
+            memberService.changeRoleManager(id);
+            return ResponseEntity.status(HttpStatus.OK).body("MANAGER로 권한이 변경되었습니다");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("권한 변경 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 멤버 권한 변경 API - MANAGER
+    @Operation(method = "PACTH",
+            summary = "멤버의 권한을 MASTER로 변경",
+            description = "header에 accessToken을 넣어 요청하면 응답합니다.")
+    @PatchMapping("/{id}/role/master")
+    public ResponseEntity<String> changeRoleMaster(
+            @PathVariable("id") Long id
+    ) {
+        try {
+            Member findMember = memberService.findOne(id);
+            if (findMember == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 ID의 멤버를 찾을 수 없습니다.");
+            }
+
+            memberService.changeRoleMaster(id);
+            return ResponseEntity.status(HttpStatus.OK).body("MASTER로 권한이 변경되었습니다");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("권한 변경 중 오류가 발생했습니다.");
+        }
+    }
 }

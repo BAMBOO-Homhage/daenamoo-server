@@ -1,10 +1,13 @@
 package daenamoo.homepage.service;
 
+import daenamoo.homepage.domain.AuthType;
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.MemberStudy;
 import daenamoo.homepage.dto.request.CreateMemberRequestDto;
 import daenamoo.homepage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,7 +59,28 @@ public class MemberService {
 //        member.update(studentId, name, pw, major, admin);
 //    }
 
-    //회원의 스터디 조회
+    // 회원의 권한 변경 - USER
+    @Transactional
+    public void changeRoleUser(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setAuthType(AuthType.ROLE_USER);
+    }
+
+    // 회원의 권한 변경 - MANAGER
+    @Transactional
+    public void changeRoleManager(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setAuthType(AuthType.ROLE_MANAGER);
+    }
+
+    // 회원의 권한 변경 - MASTER
+    @Transactional
+    public void changeRoleMaster(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setAuthType(AuthType.ROLE_MASTER);
+    }
+
+    // 회원의 스터디 조회
     public List<MemberStudy> findOneStudies(Long memberId) {
         Member member = memberRepository.findById(memberId).get();
         return member.getMemberStudies();

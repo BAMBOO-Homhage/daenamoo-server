@@ -99,20 +99,3 @@ public class StudyApiController {
     }
 }
 
-//
-//    @Data
-//    @AllArgsConstructor
-//    static class StudyMemberDto {
-//        private Long id;
-//        private String name;
-//        List<MemberStudyRequestDto> memberStudies;
-//    }
-//
-//    @Data
-//    @AllArgsConstructor
-//    static class MemberStudyDto {
-//        private String memberName;
-//        private int o_count;
-//        private int x_count;
-//    }
-

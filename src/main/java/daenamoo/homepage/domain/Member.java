@@ -38,6 +38,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<LibraryPost> libraryPosts = new ArrayList<>();
 
+    public void setAuthType(AuthType authType) {
+        this.authType = authType;
+    }
+
     //연관관계 메서드
     public void addMemberStudy(MemberStudy memberStudy) {
         memberStudies.add(memberStudy);
