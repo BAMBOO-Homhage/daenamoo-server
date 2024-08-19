@@ -1,13 +1,13 @@
 package daenamoo.homepage.api;
 
-import daenamoo.homepage.domain.Member;
-import daenamoo.homepage.domain.MemberStudy;
 import daenamoo.homepage.domain.Study;
+import daenamoo.homepage.dto.request.CreateStudyRequestDto;
+import daenamoo.homepage.dto.response.MemberStudyResponseDto;
+import daenamoo.homepage.dto.response.StudyMemberResponseDto;
+import daenamoo.homepage.dto.response.StudyResponseDto;
 import daenamoo.homepage.service.StudyService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,101 +20,82 @@ import static daenamoo.homepage.api.ResultDto.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/studies")
 public class StudyApiController {
 
     private final StudyService studyService;
 
     //스터디 생성 API
-    @PostMapping("/studies/new")
-    public ResponseEntity<String> createStudy(@Valid @RequestBody Study study) {
+    @Operation(method = "POST",
+            summary = "스터디 생성 API",
+            description = "CreateStudyRequestDto 형태로 name, headCount, totalStudyCount, is_book을 " +
+                    "RequestBody에 담아서 요청합니다.")
+    @PostMapping("/new")
+    public ResponseEntity<String> createStudy(@Valid @RequestBody CreateStudyRequestDto createStudyRequestDto) {
         try {
-            studyService.createStudy(study);
-            return new ResponseEntity<>("Study created successfully", HttpStatus.CREATED);
+            studyService.createStudy(createStudyRequestDto);
+            return new ResponseEntity<>("스터디가 생성되었습니다.", HttpStatus.CREATED);
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    //스터디 전체 목록 조회 API
-    @GetMapping("/studies")
+    @Operation(method = "GET",
+            summary = "스터디 전체 조회 API",
+            description = "header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("")
     public Result findStudies() {
         List<Study> studies = studyService.findStudies();
         List<Object> collect = studies.stream()
-                .map(s -> new StudyDto(s.getId(), s.getName(), s.getHeadCount(), s.getTotalStudyCount(), s.getStudyCount(), s.is_book()))
+                .map(s -> new StudyResponseDto(s))
                 .collect(Collectors.toList());
 
         return new Result(collect);
     }
 
-    //특정 스터디 조회 API
-    @GetMapping("/studies/{id}")
+    @Operation(method = "GET",
+            summary = "특정 스터디 조회 API",
+            description = "header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("/{id}")
     public Result findStudy(
             @PathVariable("id") Long id
     ) {
         Study study = studyService.findStudy(id);
-        StudyDto studyDto = new StudyDto(
-                study.getId(),
-                study.getName(),
-                study.getHeadCount(),
-                study.getTotalStudyCount(),
-                study.getStudyCount(),
-                study.is_book()
-        );
-        return new Result(studyDto);
+        StudyResponseDto studyResponseDto = new StudyResponseDto(study);
+        return new Result(studyResponseDto);
     }
 
     //스터디에 회원 추가 API
-    @PostMapping("/studies/{studyId}/members/{memberId}")
+    @Operation(method = "POST",
+            summary = "스터디에 회원 추가 API",
+            description = "studyId, memberId를 쿼리 파라미터로 요구합니다. header에 accessToken을 넣어 요청하면 응답합니다.")
+    @PostMapping("/{studyId}/members/{memberId}")
     public ResponseEntity<String> addStudyMember(
             @PathVariable("studyId") Long studyId,
             @PathVariable("memberId") Long memberId
     ) {
         Long memberStudyId = studyService.addMember(studyId, memberId);
         if (memberStudyId == null) {
-            return ResponseEntity.ok("회원 추가 실패");
+            return ResponseEntity.ok("회원 정보가 없습니다. 회원 추가에 실패했습니다.");
         }
-        return ResponseEntity.ok("Member added to study successfully");
+        return ResponseEntity.ok("회원 추가에 성공했습니다.");
     }
 
     //스터디에 소속된 멤버 조회 API
-    @GetMapping("/studies/{id}/members")
+    @Operation(method = "GET",
+            summary = "스터디에 소속된 멤버 조회 API",
+            description = "studyId를 쿼리 파라미터로 요구합니다. header에 accessToken을 넣어 요청하면 응답합니다.")
+    @GetMapping("/{id}/members")
     public Result findStudyMembers(
             @PathVariable("id") Long id
     ) {
         Study study = studyService.findStudy(id);
-        List<MemberStudyDto> collect = study.getMemberStudies().stream()
-                .map(ms -> new MemberStudyDto(ms.getMember().getName(), ms.getOCount(), ms.getXCount()))
+        List<MemberStudyResponseDto> collect = study.getMemberStudies().stream()
+                .map(ms -> new MemberStudyResponseDto(ms))
                 .collect(Collectors.toList());
-        StudyMemberDto smDto = new StudyMemberDto(study.getId(), study.getName(), collect);
+        StudyMemberResponseDto smDto = new StudyMemberResponseDto(study.getId(), study.getName(), collect);
 
         return new Result(smDto);
     }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    static class StudyDto {
-        private Long id;
-        private String name;
-        private int headCount;
-        private int totalStudyCount;
-        private int studyCount;
-        private boolean isBook;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class StudyMemberDto {
-        private Long id;
-        private String name;
-        List<MemberStudyDto> memberStudies;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MemberStudyDto {
-        private String memberName;
-        private int o_count;
-        private int x_count;
-    }
 }
+

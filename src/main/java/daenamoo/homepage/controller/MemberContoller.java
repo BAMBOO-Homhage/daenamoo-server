@@ -16,20 +16,20 @@ public class MemberContoller {
 
     private final MemberService memberService;
 
-    @PostMapping("/members/new")
-    public ResponseEntity<String> create(@Valid @RequestBody Member member) {
-        try {
-            Member newMember = new Member();
-            newMember.setStudentId(member.getStudentId());
-            newMember.setName(member.getName());
-            newMember.setPw(member.getPw());
-            newMember.setMajor(member.getMajor());
-            newMember.setAdmin(member.isAdmin());
-
-            memberService.join(newMember);
-            return new ResponseEntity<>("Member created successfully", HttpStatus.CREATED);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/members/new")
+//    public ResponseEntity<String> create(@Valid @RequestBody Member member) {
+//        try {
+//            Member newMember = new Member();
+//            newMember.setStudentId(member.getStudentId());
+//            newMember.setName(member.getName());
+//            newMember.setPassword(member.getPassword());
+//            newMember.setMajor(member.getMajor());
+//            newMember.setAuthType(member.getAuthType());
+//
+//            memberService.join(newMember);
+//            return new ResponseEntity<>("Member created successfully", HttpStatus.CREATED);
+//        } catch (IllegalStateException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

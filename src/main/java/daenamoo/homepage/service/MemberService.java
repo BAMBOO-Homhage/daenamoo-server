@@ -1,14 +1,20 @@
 package daenamoo.homepage.service;
 
+import daenamoo.homepage.domain.AuthType;
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.MemberStudy;
-import daenamoo.homepage.domain.Study;
+import daenamoo.homepage.dto.request.CreateMemberRequestDto;
 import daenamoo.homepage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,19 +22,22 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     //회원 가입
     @Transactional
-    public Long join(Member member) {
-        validateDuplicateMember(member);
+    public Long join(CreateMemberRequestDto createMemberRequestDto) {
+        validateDuplicateMember(createMemberRequestDto);
+
+        Member member = createMemberRequestDto.toEntity(passwordEncoder);
         memberRepository.save(member);
         return member.getId();
     }
 
     //학번으로 중복 회원 검증
-    private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByStudentId(member.getStudentId());
-        if(!findMembers.isEmpty()) {
+    private void validateDuplicateMember(CreateMemberRequestDto createMemberRequestDto) {
+        Optional<Member> findMember = memberRepository.findByStudentId(createMemberRequestDto.getStudentId());
+        if(findMember.isPresent()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
@@ -43,14 +52,35 @@ public class MemberService {
         return memberRepository.findById(memberId).get();
     }
 
-    //회원 수정
+//    //회원 수정
+//    @Transactional
+//    public void update(Long id, String studentId, String name, String pw, String major, boolean admin) {
+//        Member member = memberRepository.findById(id).get();
+//        member.update(studentId, name, pw, major, admin);
+//    }
+
+    // 회원의 권한 변경 - USER
     @Transactional
-    public void update(Long id, String studentId, String name, String pw, String major, boolean admin) {
-        Member member = memberRepository.findById(id).get();
-        member.update(studentId, name, pw, major, admin);
+    public void changeRoleUser(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setAuthType(AuthType.ROLE_USER);
     }
 
-    //회원의 스터디 조회
+    // 회원의 권한 변경 - MANAGER
+    @Transactional
+    public void changeRoleManager(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setAuthType(AuthType.ROLE_MANAGER);
+    }
+
+    // 회원의 권한 변경 - MASTER
+    @Transactional
+    public void changeRoleMaster(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setAuthType(AuthType.ROLE_MASTER);
+    }
+
+    // 회원의 스터디 조회
     public List<MemberStudy> findOneStudies(Long memberId) {
         Member member = memberRepository.findById(memberId).get();
         return member.getMemberStudies();
