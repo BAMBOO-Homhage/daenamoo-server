@@ -29,8 +29,11 @@ public class Post {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private boolean isNotice;
+
+    @Enumerated(EnumType.STRING)
+    private PostCategory category;
 
     // 게시글 수정
     public void update(String title, String content){
