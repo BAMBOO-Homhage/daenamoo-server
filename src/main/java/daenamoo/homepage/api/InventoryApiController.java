@@ -124,7 +124,7 @@ public class InventoryApiController {
     }
 
     @Operation(method = "GET",
-            summary = "특정 스터디의 스터디 정리본 목록 조회 API",
+            summary = "특정 스터디에서 특정 멤버의 스터디 정리본 목록 조회 API",
             description = "header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
     @GetMapping("/studies/{studyId}/members/{memberId}")
     public ResponseEntity<?> readInventoryInStudyByMember(
