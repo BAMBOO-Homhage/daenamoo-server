@@ -6,6 +6,7 @@ import daenamoo.homepage.dto.request.UpdateInventoryRequestDto;
 import daenamoo.homepage.dto.response.InventoryResponseDto;
 import daenamoo.homepage.exception.InventoryNotFoundException;
 import daenamoo.homepage.service.InventoryService;
+import daenamoo.homepage.service.StudyService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import static daenamoo.homepage.api.ResultDto.*;
 public class InventoryApiController {
 
     private final InventoryService inventoryService;
+    private final StudyService studyService;
 
     @Operation(method = "POST",
             summary = "스터디 정리본 생성 API",
@@ -78,6 +80,69 @@ public class InventoryApiController {
         } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>("스터디 정리본 조회에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(method = "GET",
+            summary = "특정 스터디의 스터디 정리본 목록 조회 API",
+            description = "header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("/studies/{id}")
+    public ResponseEntity<?> readInventoryInStudy(@PathVariable("id") Long id) {
+        try {
+            List<Inventory> inventories = inventoryService.findInventoriesInStudy(id);
+            List<InventoryResponseDto> collect = inventories.stream()
+                    .map(i -> new InventoryResponseDto(i))
+                    .collect(Collectors.toList());
+
+            Result result = new Result(collect);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>("특정 스터디의 스터디 정리본 목록 조회에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(method = "GET",
+            summary = "특정 스터디의 스터디 정리본 목록 조회 API",
+            description = "header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("/members/{id}")
+    public ResponseEntity<?> readInventoryByMember(@PathVariable("id") Long id) {
+        try {
+            List<Inventory> inventories = inventoryService.findInventoriesInMember(id);
+            List<InventoryResponseDto> collect = inventories.stream()
+                    .map(i -> new InventoryResponseDto(i))
+                    .collect(Collectors.toList());
+
+            Result result = new Result(collect);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>("특정 멤버의 스터디 정리본 목록 조회에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(method = "GET",
+            summary = "특정 스터디의 스터디 정리본 목록 조회 API",
+            description = "header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
+    @GetMapping("/studies/{studyId}/members/{memberId}")
+    public ResponseEntity<?> readInventoryInStudyByMember(
+            @PathVariable("studyId") Long studyId,
+            @PathVariable("memberId") Long memberId
+    ) {
+        try {
+            List<Inventory> inventories = inventoryService.findInventoriesInStudyByMember(studyId, memberId);
+            List<InventoryResponseDto> collect = inventories.stream()
+                    .map(i -> new InventoryResponseDto(i))
+                    .collect(Collectors.toList());
+
+            Result result = new Result(collect);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>("특정 스터디의 특정 멤버의 스터디 정리본 목록 조회에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

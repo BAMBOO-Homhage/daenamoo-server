@@ -46,6 +46,21 @@ public class InventoryService {
         return inventoryRepository.findById(inventoryId).get();
     }
 
+    // 특정 스터디의 스터디 정리본 조회
+    public List<Inventory> findInventoriesInStudy(Long studyId) {
+        return inventoryRepository.findByStudyId(studyId);
+    }
+
+    // 특정 멤버의 스터디 정리본 조회
+    public List<Inventory> findInventoriesInMember(Long memberId) {
+        return inventoryRepository.findByMemberId(memberId);
+    }
+
+    // 특정 스터디에서 특정 멤버의 스터디 정리본 조회
+    public List<Inventory> findInventoriesInStudyByMember(Long studyId, Long memberId) {
+        return inventoryRepository.findByStudyIdAndMemberId(studyId, memberId);
+    }
+
     // 스터디 정리본 수정
     @Transactional
     public Long updateInventory(Long inventoryId, UpdateInventoryRequestDto updateInventoryRequestDto) {
