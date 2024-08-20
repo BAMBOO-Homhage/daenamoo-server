@@ -146,7 +146,7 @@ public class MemberApiController {
 
     //멤버의 스터디 조회
     @Operation(method = "GET",
-            summary = "특정 특정의 스터디 조회",
+            summary = "특정 멤버의 스터디 조회",
             description = "멤버 한명의 스터디를 조회합니다. header에 accessToken을 넣어 요청하면 Result 형태로 응답합니다.")
     @GetMapping("/{id}/studies")
     public Result findStudyInMember(

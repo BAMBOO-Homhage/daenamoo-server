@@ -57,6 +57,12 @@ public class StudyService {
         return memberStudy.getId();
     }
 
+    // 스터디의 회원 조회
+    public List<MemberStudy> findMembers(Long studyId) {
+        Study study = studyRepository.findById(studyId).get();
+        return study.getMemberStudies();
+    }
+
     // 스터디 진행현황 조회
     public double getStudyStatus(Long studyId) {
         Study study = studyRepository.findById(studyId).get();
