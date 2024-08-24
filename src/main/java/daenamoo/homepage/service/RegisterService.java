@@ -28,14 +28,26 @@ public class RegisterService {
     @Transactional
     public Long createRegister(String studentId, CreateRegisterRequestDto createRegisterRequestDto) {
 
+        // 멤버 및 과목 조회
         Member member = memberRepository.findByStudentId(studentId).get();
         Subject subject = subjectRepository.findById(createRegisterRequestDto.getSubjectId())
                 .orElseThrow(() -> new IllegalStateException("해당 수강신청이 존재하지 않습니다."));
 
+        // 중복 검사
+        vaildateDuplicateRegister(member, subject);
+
+        // 생성 로직
         Register register = createRegisterRequestDto.toEntity(member, subject);
         registerRepository.save(register);
 
         return register.getId();
+    }
+
+    private void vaildateDuplicateRegister(Member member, Subject subject) {
+        Optional<Register> existingRegister = registerRepository.findByMemberAndSubject(member, subject);
+        if (existingRegister.isPresent()) {
+            throw new IllegalStateException("해당 학생은 이미 이 과목에 수강신청을 했습니다.");
+        }
     }
 
     // 수강 신청 목록 조회
