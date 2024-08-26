@@ -8,10 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HomepageApplication {
 	public static void main(String[] args) {
 
-		Member member = new Member();
-		member.setName("회원1");
-		System.out.println("member = " + member.getName());
-
 		SpringApplication.run(HomepageApplication.class, args);
 	}
 }
