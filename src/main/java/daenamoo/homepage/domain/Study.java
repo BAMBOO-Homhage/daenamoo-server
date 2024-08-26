@@ -23,9 +23,11 @@ public class Study {
     private int studyCount;
     private boolean is_book;
 
+    @Builder.Default
     @OneToMany(mappedBy = "study")
     private List<MemberStudy> memberStudies = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "study")
     private List<Inventory> inventories = new ArrayList<>();
 
