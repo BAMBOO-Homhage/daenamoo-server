@@ -3,10 +3,7 @@ package daenamoo.homepage.domain;
 import daenamoo.homepage.dto.request.CreateInventoryRequestDto;
 import daenamoo.homepage.dto.request.UpdateInventoryRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +12,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Inventory {
 

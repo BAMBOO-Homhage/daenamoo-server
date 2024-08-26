@@ -33,7 +33,7 @@ public class SubjectApiController {
     public ResponseEntity<String> createStudy(@Valid @RequestBody CreateSubjectRequestDto createSubjectRequestDto) {
         try {
             subjectService.createSubject(createSubjectRequestDto);
-            return new ResponseEntity<>("스터디가 생성되었습니다.", HttpStatus.CREATED);
+            return new ResponseEntity<>("과목이 생성되었습니다.", HttpStatus.CREATED);
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

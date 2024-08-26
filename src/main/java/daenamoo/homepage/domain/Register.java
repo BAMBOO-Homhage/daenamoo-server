@@ -1,16 +1,21 @@
 package daenamoo.homepage.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
-public class MemberSubject {
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class Register {
 
     @Id @GeneratedValue
-    @Column(name = "ms_id")
+    @Column(name = "register_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -20,4 +25,6 @@ public class MemberSubject {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "subject_id")
     private Subject subject;
+
+    private LocalDateTime createdAt;
 }
