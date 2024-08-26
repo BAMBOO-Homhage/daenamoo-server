@@ -1,10 +1,7 @@
 package daenamoo.homepage.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Study {
 
@@ -26,9 +23,11 @@ public class Study {
     private int studyCount;
     private boolean is_book;
 
+    @Builder.Default
     @OneToMany(mappedBy = "study")
     private List<MemberStudy> memberStudies = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "study")
     private List<Inventory> inventories = new ArrayList<>();
 

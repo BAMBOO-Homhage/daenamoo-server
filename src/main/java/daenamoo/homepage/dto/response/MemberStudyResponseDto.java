@@ -7,12 +7,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MemberStudyResponseDto {
-    private String name;
+    private String studyName;
     private int oCount;
     private int xCount;
 
     public MemberStudyResponseDto(MemberStudy memberStudy) {
-        this.name = memberStudy.getMember().getName();
+        this.studyName = memberStudy.getStudy().getName();
         this.oCount = memberStudy.getOCount();
         this.xCount = memberStudy.getXCount();
     }

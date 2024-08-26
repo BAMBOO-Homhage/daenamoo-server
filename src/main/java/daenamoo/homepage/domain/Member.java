@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member {
 
@@ -31,12 +31,15 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private AuthType authType;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Award> awords = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<MemberStudy> memberStudies = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<LibraryPost> libraryPosts = new ArrayList<>();
 

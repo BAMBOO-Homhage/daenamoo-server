@@ -1,5 +1,6 @@
 package daenamoo.homepage.api;
 
+import daenamoo.homepage.domain.MemberStudy;
 import daenamoo.homepage.domain.Study;
 import daenamoo.homepage.dto.request.CreateStudyRequestDto;
 import daenamoo.homepage.dto.response.MemberStudyResponseDto;
@@ -90,12 +91,14 @@ public class StudyApiController {
             @PathVariable("id") Long id
     ) {
         Study study = studyService.findStudy(id);
-        List<MemberStudyResponseDto> collect = study.getMemberStudies().stream()
-                .map(ms -> new MemberStudyResponseDto(ms))
-                .collect(Collectors.toList());
-        StudyMemberResponseDto smDto = new StudyMemberResponseDto(study.getId(), study.getName(), collect);
+        List<MemberStudy> members = studyService.findMembers(id);
 
-        return new Result(smDto);
+        List<StudyMemberResponseDto> collect = members.stream()
+                .map(ms -> new StudyMemberResponseDto(ms))
+                .collect(Collectors.toList());
+
+
+        return new Result(collect);
     }
 }
 
