@@ -21,6 +21,8 @@ public class CorsConfig implements WebMvcConfigurer {
         //데이터 교환이 가능한 URL 지정
         ArrayList<String> allowedOriginPatterns = new ArrayList<>();
         allowedOriginPatterns.add("http://localhost:8080");
+        allowedOriginPatterns.add("http://localhost:3000");
+        allowedOriginPatterns.add("http://43.203.172.185:3000");
 
         //허용하는 HTTP METHOD 지정
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
