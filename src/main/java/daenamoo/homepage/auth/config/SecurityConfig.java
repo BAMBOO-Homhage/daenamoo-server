@@ -28,6 +28,7 @@ public class SecurityConfig {
 
     //인증이 필요하지 않은 url
     private final String[] allowedUrls = {
+            "",
             "/api/members/login",
             "/api/members/signup",
             "/auth/reissue",
