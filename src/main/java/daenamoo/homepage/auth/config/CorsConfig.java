@@ -2,41 +2,37 @@ package daenamoo.homepage.auth.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+@Configuration
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CorsConfig implements WebMvcConfigurer {
 
+    @Bean
     public static CorsConfigurationSource apiConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        //데이터 교환이 가능한 URL 지정
-        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("http://localhost:8080");
-        allowedOriginPatterns.add("http://localhost:3000");
-        allowedOriginPatterns.add("http://43.203.172.185:8080");
+        // 데이터 교환이 가능한 URL 지정
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:8080",
+                "http://localhost:3000",
+                "http://43.203.172.185:8080"
+        ));
 
-        //허용하는 HTTP METHOD 지정
-        ArrayList<String> allowedHttpMethods = new ArrayList<>();
-        allowedHttpMethods.add("GET");
-        allowedHttpMethods.add("POST");
-        allowedHttpMethods.add("PUT");
-        allowedHttpMethods.add("DELETE");
+        // 허용하는 HTTP METHOD 지정
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
 
-        configuration.setAllowedOrigins(allowedOriginPatterns);
-        configuration.setAllowedMethods(allowedHttpMethods);
-
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        // 허용하는 HTTP Headers 지정
         configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
-        configuration.setAllowCredentials(true); //credential TRUE
+        configuration.setAllowCredentials(true); // credential TRUE
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
