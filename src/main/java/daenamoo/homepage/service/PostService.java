@@ -22,10 +22,9 @@ public class PostService {
 
     //CREATE 글 생성
     @Transactional
-    public Long createPost(PostDto.Request dto, Long memberId, Class<? extends Post> postType) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found. ID: " + memberId));
-        dto.setMemberId(member.getId());
+    public Long createPost(PostDto.Request dto, String studentId, Class<? extends Post> postType) {
+
+        Member member = memberRepository.findByStudentId(studentId).get();
         Post post = dto.toEntity(member, postType);
         postRepository.save(post);
         return post.getPostId();

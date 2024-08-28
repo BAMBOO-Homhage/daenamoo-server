@@ -1,5 +1,6 @@
 package daenamoo.homepage.api;
 
+import daenamoo.homepage.auth.userDetails.CustomUserDetails;
 import daenamoo.homepage.dto.PostDto;
 import daenamoo.homepage.service.PostService;
 import daenamoo.homepage.domain.post.Knowledge;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api")
@@ -20,11 +22,12 @@ class PostApiController {
 
     @Operation(method = "POST",
             summary = "공지사항게시판 작성 API",
-            description = "공지사항게시판 작성 API입니다.")
+            description = "")
     @PostMapping("/notices")
-    public ResponseEntity<String> createNotice(@RequestBody PostDto.Request dto) {
-        Long testMemberId = 1L;
-        postService.createPost(dto, testMemberId, Notice.class);
+    public ResponseEntity<String> createNotice(@RequestBody PostDto.Request dto,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String studentId = customUserDetails.getUsername();
+        postService.createPost(dto, studentId, Notice.class);
         return ResponseEntity.status(HttpStatus.CREATED).body("공지사항게시판 작성에 성공했습니다.");
     }
 
@@ -32,9 +35,10 @@ class PostApiController {
             summary = "지식공유게시판 작성 API",
             description = "지식공유게시판 작성 API입니다.")
     @PostMapping("/knowledge")
-    public ResponseEntity<String> createKnowledge(@RequestBody PostDto.Request dto) {
-        Long testMemberId = 1L;
-        postService.createPost(dto, testMemberId, Knowledge.class);
+    public ResponseEntity<String> createKnowledge(@RequestBody PostDto.Request dto,
+                                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String studentId = customUserDetails.getUsername();
+        postService.createPost(dto, studentId, Knowledge.class);
         return ResponseEntity.status(HttpStatus.CREATED).body("지식공유게시판 작성에 성공했습니다.");
     }
 
@@ -42,9 +46,10 @@ class PostApiController {
             summary = "질문답변게시판 작성 API",
             description = "질문답변게시판 작성 API입니다.")
     @PostMapping("/QandA")
-    public ResponseEntity<String> createQandA(@RequestBody PostDto.Request dto) {
-        Long testMemberId = 1L;
-        postService.createPost(dto, testMemberId, QandA.class);
+    public ResponseEntity<String> createQandA(@RequestBody PostDto.Request dto,
+                                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String studentId = customUserDetails.getUsername();
+        postService.createPost(dto, studentId, QandA.class);
         return ResponseEntity.status(HttpStatus.CREATED).body("질문답변게시판 작성에 성공했습니다.");
     }
 

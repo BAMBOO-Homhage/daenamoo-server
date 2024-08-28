@@ -4,6 +4,7 @@ import daenamoo.homepage.domain.Comment;
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.post.Post;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +20,7 @@ public class CommentDto {
         private Long postId;
         private Long memberId;
         private String content;
-        private String createdAt;
+        private LocalDateTime createdAt;
 
         /* Dto -> Entity */
         public Comment toEntity(Post post, Member member) {
@@ -28,7 +29,7 @@ public class CommentDto {
                     .post(post)
                     .member(member)
                     .content(content)
-                    .createdAt(createdAt)
+                    .createdAt(LocalDateTime.now())
                     .build();
 
             return comments;
@@ -42,7 +43,7 @@ public class CommentDto {
         private Long postId;
         private Long memberId;
         private String content;
-        private String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        private LocalDateTime createdAt;
 
         public Response(Comment comment) {
             this.commentId = comment.getCommentId();

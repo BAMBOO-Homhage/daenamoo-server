@@ -1,7 +1,7 @@
 package daenamoo.homepage.dto;
 
 import daenamoo.homepage.domain.Member;
-import daenamoo.homepage.domain.PostCategory;
+import daenamoo.homepage.domain.post.PostCategory;
 import daenamoo.homepage.domain.post.Knowledge;
 import daenamoo.homepage.domain.post.Notice;
 import daenamoo.homepage.domain.post.Post;
@@ -9,7 +9,6 @@ import daenamoo.homepage.domain.post.QandA;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +25,7 @@ public class PostDto {
         private Long memberId;
         private String title;
         private String content;
-        private String createdAt;
-        private boolean isNotice;
+        private LocalDateTime createdAt;
         private PostCategory category;
         private int views;
 
@@ -38,7 +36,7 @@ public class PostDto {
                         .member(member)
                         .title(title)
                         .content(content)
-                        .isNotice(isNotice)
+                        .createdAt(LocalDateTime.now())
                         .category(category)
                         .views(0)
                         .build();
@@ -48,6 +46,7 @@ public class PostDto {
                         .member(member)
                         .title(title)
                         .content(content)
+                        .createdAt(LocalDateTime.now())
                         .views(0)
                         .build();
             } else if (postType == QandA.class) {
@@ -56,6 +55,7 @@ public class PostDto {
                         .member(member)
                         .title(title)
                         .content(content)
+                        .createdAt(LocalDateTime.now())
                         .views(0)
                         .build();
             }
@@ -69,7 +69,7 @@ public class PostDto {
         private Long memberId;
         private String title;
         private String content;
-        private String createdAt;
+        private LocalDateTime createdAt;
         private boolean isNotice;
         private PostCategory category;
         private int views;
@@ -84,7 +84,6 @@ public class PostDto {
             this.views = post.getViews();
             if (post instanceof Notice) {
                 Notice notice = (Notice) post;
-                this.isNotice = notice.isNotice();
                 this.category = notice.getCategory();
                 this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             }

@@ -24,14 +24,11 @@ public class CommentService {
 
     //CREATE 댓글 생성
     @Transactional
-    public Long createComment(Long memberId, Long postId, CommentDto.Request dto) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 회원이 존재하지 않습니다. " + memberId));
-        ;
-        Post post = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시물이 존재하지 않습니다. " + postId));
+    public Long createComment(Long postId, String studentId, CommentDto.Request dto) {
+        Member member = memberRepository.findByStudentId(studentId).get();
+        Post post = postRepository.findById(postId).get();
 
-        dto.setMemberId(memberId);
+        dto.setMemberId(member.getId());
         dto.setPostId(postId);
 
         Comment comment = dto.toEntity(post, member);
@@ -43,9 +40,8 @@ public class CommentService {
     //READ
     @Transactional(readOnly = true)
     public List<CommentDto.Response> findAll(Long id) {
-        Post posts = postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
-        List<Comment> comments = posts.getComments();
+        Post post = postRepository.findById(id).get();
+        List<Comment> comments = post.getComments();
         return comments.stream().map(CommentDto.Response::new).collect(Collectors.toList());
     }
 

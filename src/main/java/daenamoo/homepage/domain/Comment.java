@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @SuperBuilder
@@ -32,7 +34,7 @@ public class Comment {
 
     @Column(name = "created_at")
     @CreatedDate
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     //댓글 수정
     public void update(String content) {
