@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -22,7 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String studentId) throws UsernameNotFoundException {
 
-        log.info("[ CustomUserDetailsService ] StudentId 을 이용하여 Member 를 검색합니다.");
         Optional<Member> findMember = memberRepository.findByStudentId(studentId);
         if (findMember.isPresent()) {
             Member member = findMember.get();
