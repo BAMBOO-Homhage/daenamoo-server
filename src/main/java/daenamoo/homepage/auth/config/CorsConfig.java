@@ -24,7 +24,7 @@ public class CorsConfig implements WebMvcConfigurer {
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:8080",
                 "http://localhost:3000",
-                "http://3.39.231.129:8080"
+                "http://3.38.165.234:8080"
         ));
 
         // 허용하는 HTTP METHOD 지정
