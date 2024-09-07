@@ -1,11 +1,9 @@
 package daenamoo.homepage.dto;
 
 import daenamoo.homepage.domain.Member;
-import daenamoo.homepage.domain.post.PostCategory;
 import daenamoo.homepage.domain.post.Knowledge;
 import daenamoo.homepage.domain.post.Notice;
 import daenamoo.homepage.domain.post.Post;
-import daenamoo.homepage.domain.post.QandA;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -26,8 +24,9 @@ public class PostDto {
         private String title;
         private String content;
         private LocalDateTime createdAt;
-        private PostCategory category;
+        private String category;
         private int views;
+        private boolean isNotice;
 
         public Post toEntity(Member member, Class<? extends Post> postType) {
             if (postType == Notice.class) {
@@ -38,6 +37,7 @@ public class PostDto {
                         .content(content)
                         .createdAt(LocalDateTime.now())
                         .category(category)
+                        .isNotice(isNotice)
                         .views(0)
                         .build();
             } else if (postType == Knowledge.class) {
@@ -47,15 +47,7 @@ public class PostDto {
                         .title(title)
                         .content(content)
                         .createdAt(LocalDateTime.now())
-                        .views(0)
-                        .build();
-            } else if (postType == QandA.class) {
-                return QandA.builder()
-                        .postId(postId)
-                        .member(member)
-                        .title(title)
-                        .content(content)
-                        .createdAt(LocalDateTime.now())
+                        .category(category)
                         .views(0)
                         .build();
             }
@@ -66,14 +58,15 @@ public class PostDto {
     @Getter
     public static class Response {
         private Long postId;
-        private Long memberId;
+        private Long memberId;2
         private String title;
         private String content;
         private LocalDateTime createdAt;
         private boolean isNotice;
-        private PostCategory category;
+        private String category;
         private int views;
         private List<CommentDto.Response> comments = new ArrayList<>();
+        private List<String> Images;
 
         public Response(Post post) {
             this.postId = post.getPostId();
@@ -82,9 +75,13 @@ public class PostDto {
             this.content = post.getContent();
             this.createdAt = post.getCreatedAt();
             this.views = post.getViews();
-            if (post instanceof Notice) {
-                Notice notice = (Notice) post;
+            this.Images = post.getImages();
+            if (post instanceof Notice notice) {
                 this.category = notice.getCategory();
+                this.isNotice = notice.isNotice();
+                this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
+            } else if (post instanceof Knowledge knowledge) {
+                this.category = knowledge.getCategory();
                 this.comments = post.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             }
         }

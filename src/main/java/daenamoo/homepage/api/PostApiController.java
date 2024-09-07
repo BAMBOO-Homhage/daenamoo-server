@@ -5,7 +5,6 @@ import daenamoo.homepage.dto.PostDto;
 import daenamoo.homepage.service.PostService;
 import daenamoo.homepage.domain.post.Knowledge;
 import daenamoo.homepage.domain.post.Notice;
-import daenamoo.homepage.domain.post.QandA;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,17 +39,6 @@ class PostApiController {
         String studentId = customUserDetails.getUsername();
         postService.createPost(dto, studentId, Knowledge.class);
         return ResponseEntity.status(HttpStatus.CREATED).body("지식공유게시판 작성에 성공했습니다.");
-    }
-
-    @Operation(method = "POST",
-            summary = "질문답변게시판 작성 API",
-            description = "질문답변게시판 작성 API입니다.")
-    @PostMapping("/QandA")
-    public ResponseEntity<String> createQandA(@RequestBody PostDto.Request dto,
-                                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String studentId = customUserDetails.getUsername();
-        postService.createPost(dto, studentId, QandA.class);
-        return ResponseEntity.status(HttpStatus.CREATED).body("질문답변게시판 작성에 성공했습니다.");
     }
 
     @Operation(method = "GET",

@@ -50,12 +50,8 @@ public abstract class Post{
     @OrderBy("commentId asc") // 댓글 정렬
     private List<Comment> comments;
 
-    /**
-     * 게시글 수정
-    public void update(String title, String content){
-        this.title = title;
-        this.content = content;
-    }*/
+    private List<String> images;
+
     public void update(String title, String content) {
         if (title != null && !title.isEmpty() && content != null && !content.isEmpty()) {
             this.title = title;

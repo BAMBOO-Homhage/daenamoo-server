@@ -15,9 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class Notice extends Post {
     private boolean isNotice;
-
-    @Enumerated(EnumType.STRING)
-    private PostCategory category;
+    private String category;
 }
 
 

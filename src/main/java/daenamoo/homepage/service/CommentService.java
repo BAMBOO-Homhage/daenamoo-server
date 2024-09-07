@@ -47,18 +47,18 @@ public class CommentService {
 
     /* UPDATE */
     @Transactional
-    public void update(Long postId, Long memberId, CommentDto.Request dto) {
-        Comment comment = commentRepository.findByPost_PostIdAndMemberId(postId, memberId).orElseThrow(() ->
-                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + memberId));
+    public void update(Long postId, String studentId, CommentDto.Request dto) {
+        Comment comment = commentRepository.findByPost_PostIdAndMember_StudentId(postId, studentId).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + studentId));
 
         comment.update(dto.getContent());
     }
 
     /* DELETE */
     @Transactional
-    public void delete(Long postId, Long memberId) {
-        Comment comment = commentRepository.findByPost_PostIdAndMemberId(postId, memberId).orElseThrow(() ->
-                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + memberId));
+    public void delete(Long postId, String studentId) {
+        Comment comment = commentRepository.findByPost_PostIdAndMember_StudentId(postId, studentId).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + studentId));
 
         commentRepository.delete(comment);
     }
