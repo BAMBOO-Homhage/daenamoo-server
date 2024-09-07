@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -25,9 +26,9 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
 
-
-    //인증이 필요하지 않은 url
+    // 인증이 필요하지 않은 URL 목록
     private final String[] allowedUrls = {
+            "/",
             "/api/members/login",
             "/api/members/signup",
             "/auth/reissue",
@@ -49,60 +50,49 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         // CORS 정책 설정
-        http
-                .cors(cors -> cors
-                        .configurationSource(CorsConfig.apiConfigurationSource()));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));  // 여기서 CORS 설정 사용
 
-        // csrf 비활성화
-        http
-                .csrf(AbstractHttpConfigurer::disable);
+        // CSRF 비활성화
+        http.csrf(AbstractHttpConfigurer::disable);
 
-        // form 로그인 방식 비활성화 -> REST API 로그인을 사용할 것이기 때문에
-        http
-                .formLogin(AbstractHttpConfigurer::disable);
+        // REST API 방식 로그인을 사용하기 때문에 Form 로그인 비활성화
+        http.formLogin(AbstractHttpConfigurer::disable);
 
-        // http basic 인증 방식 비활성화
-        http
-                .httpBasic(AbstractHttpConfigurer::disable);
+        // HTTP 기본 인증 비활성화
+        http.httpBasic(AbstractHttpConfigurer::disable);
 
-        // 세션을 사용하지 않음. (세션 생성 정책을 Stateless 설정.)
-        http
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // 세션을 사용하지 않음 (Stateless)
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // 경로별 인가
-        http
-                .authorizeHttpRequests(auth -> auth
-                        //위에서 정의했던 allowedUrls 들은 인증이 필요하지 않음 -> permitAll
-                        .requestMatchers(allowedUrls).permitAll()
-                        .anyRequest().authenticated() // 그 외의 url 들은 인증이 필요함
-                );
-        http
-                .logout((configurer) ->
-                        configurer
-                                .logoutUrl("/api/members/logout")
-                                .deleteCookies("JSESSIONID")
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/api/members/logout"))
+        // 경로별 인가 설정
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(allowedUrls).permitAll()  // 인증 필요 없는 URL 설정
+                .anyRequest().authenticated()  // 나머지 경로는 인증 필요
+        );
 
-                );
+        // 로그아웃 설정
+        http.logout(logout -> logout
+                .logoutUrl("/api/members/logout")
+                .deleteCookies("JSESSIONID")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/members/logout"))
+        );
 
-        // Login Filter
-        CustomLoginFilter loginFilter = new CustomLoginFilter(
-                authenticationManager(authenticationConfiguration), jwtUtil);
-
-
-
-        // Login Filter URL 지정
+        // 로그인 필터 추가
+        CustomLoginFilter loginFilter = new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
         loginFilter.setFilterProcessesUrl("/api/members/login");
 
-        // filter chain 에 login filter 등록
-        http
-                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
-        // login filter 전에 Auth Filter 등록
-        http
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil), CustomLoginFilter.class);
+        // 필터 체인에 로그인 필터 등록
+        http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // JWT 인증 필터를 로그인 필터 이전에 등록
+        http.addFilterBefore(new JwtAuthorizationFilter(jwtUtil), CustomLoginFilter.class);
 
         return http.build();
     }
 
+    // CORS 설정을 빈으로 등록
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        return CorsConfig.apiConfigurationSource();  // CorsConfig에 정의된 CORS 설정 사용
+    }
 }
