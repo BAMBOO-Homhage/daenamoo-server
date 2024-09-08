@@ -43,25 +43,23 @@ public class CommentApiController {
     @Operation(method = "PUT",
             summary = "댓글 수정 API",
             description = "")
-    @PutMapping({"/posts/{postId}/comments"})
-    public ResponseEntity<String> update(@PathVariable Long postId,
-                                         @RequestBody CommentDto.Request dto,
-                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String studentId = customUserDetails.getUsername();
-        commentService.update(postId, studentId, dto);
-        return ResponseEntity.ok(studentId);
+    @PutMapping({"/posts/{postId}/comments/{commentId}"})
+    public ResponseEntity<Long> update(@PathVariable Long postId,
+                                       @PathVariable Long commentId,
+                                       @RequestBody CommentDto.Request dto) {
+        commentService.update(postId, commentId, dto);
+        return ResponseEntity.ok(commentId);
     }
 
     // DELETE
     @Operation(method = "DELETE",
             summary = "댓글 삭제 API",
             description = "")
-    @DeleteMapping("/posts/{postId}/comments")
-    public ResponseEntity<String> delete(@PathVariable Long postId,
-                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String studentId = customUserDetails.getUsername();
-        commentService.delete(postId, studentId);
-        return ResponseEntity.ok(studentId);
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<Long> delete(@PathVariable Long postId,
+                                       @PathVariable Long commentId) {
+        commentService.delete(postId, commentId);
+        return ResponseEntity.ok(commentId);
     }
 
 }

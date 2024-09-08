@@ -58,7 +58,7 @@ public class PostDto {
     @Getter
     public static class Response {
         private Long postId;
-        private Long memberId;2
+        private Long memberId;
         private String title;
         private String content;
         private LocalDateTime createdAt;
