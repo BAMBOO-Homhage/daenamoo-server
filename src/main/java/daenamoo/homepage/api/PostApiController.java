@@ -50,6 +50,22 @@ class PostApiController {
     }
 
     @Operation(method = "GET",
+            summary = "공지사항 전체 조회 API",
+            description = "공지사항 게시판의 모든 글을 조회합니다.")
+    @GetMapping("/notices")
+    public ResponseEntity<?> getAllNotices() {
+        return ResponseEntity.ok(postService.findAllNotices());
+    }
+
+    @Operation(method = "GET",
+            summary = "지식공유 전체 조회 API",
+            description = "지식공유 게시판의 모든 글을 조회합니다.")
+    @GetMapping("/knowledge")
+    public ResponseEntity<?> getAllKnowledge() {
+        return ResponseEntity.ok(postService.findAllKnowledge());
+    }
+
+    @Operation(method = "GET",
             summary = "게시글 한개 조회 API",
             description = "")
     @GetMapping("/posts/{id}")
@@ -61,8 +77,11 @@ class PostApiController {
             summary = "게시글 업데이트 API",
             description = "")
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Long> updatePost(@PathVariable Long id, @RequestBody PostDto.Request dto) {
-        postService.updatePost(id, dto);
+    public ResponseEntity<Long> updatePost(@PathVariable Long id,
+                                           @RequestBody PostDto.Request dto,
+                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String studentId = customUserDetails.getUsername();
+        postService.updatePost(id, dto, studentId);
         return ResponseEntity.ok(id);
     }
 
@@ -70,8 +89,10 @@ class PostApiController {
             summary = "게시글 삭제 API",
             description = "")
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Long> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<Long> deletePost(@PathVariable Long id,
+                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        String studentId = customUserDetails.getUsername();
+        postService.deletePost(id, studentId);
         return ResponseEntity.ok(id);
     }
 }

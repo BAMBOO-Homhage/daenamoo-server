@@ -37,6 +37,20 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    //READ 공지사항게시판 전체 조회
+    public List<PostDto.Response> findAllNotices() {
+        return postRepository.findAllNotices().stream()
+                .map(PostDto.Response::new)
+                .collect(Collectors.toList());
+    }
+
+    //READ 지식공유게시판 전체 조회
+    public List<PostDto.Response> findAllKnowledge() {
+        return postRepository.findAllKnowledge().stream()
+                .map(PostDto.Response::new)
+                .collect(Collectors.toList());
+    }
+
     //READ 글 한개 조회
     public PostDto.Response findOnePostById(Long id) {
         Post post = postRepository.findById(id)
@@ -46,15 +60,23 @@ public class PostService {
 
     //UPDATE 글 수정
     @Transactional
-    public void updatePost(Long id, PostDto.Request dto) {
+    public void updatePost(Long id, PostDto.Request dto, String studentId) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found. ID: " + id));
+        if (!post.getMember().getStudentId().equals(studentId)) {
+            throw new IllegalStateException("수정 권한이 없습니다.");  // 권한이 없으면 예외 발생
+        }
         post.update(dto.getTitle(), dto.getContent());
     }
 
     //DELETE 글 삭제
     @Transactional
-    public void deletePost(Long id) {
+    public void deletePost(Long id, String studentId) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found. ID: " + id));
+        if (!post.getMember().getStudentId().equals(studentId)) {
+            throw new IllegalStateException("삭제 권한이 없습니다.");  // 권한이 없으면 예외 발생
+        }
         postRepository.deleteById(id);
     }
 

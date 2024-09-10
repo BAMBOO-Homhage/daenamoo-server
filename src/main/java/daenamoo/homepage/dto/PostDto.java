@@ -1,5 +1,6 @@
 package daenamoo.homepage.dto;
 
+import daenamoo.homepage.domain.Like;
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.post.Knowledge;
 import daenamoo.homepage.domain.post.Notice;
@@ -67,6 +68,7 @@ public class PostDto {
         private int views;
         private List<CommentDto.Response> comments = new ArrayList<>();
         private List<String> Images;
+        private List<LikeDto.Response> likes;
 
         public Response(Post post) {
             this.postId = post.getPostId();
@@ -76,6 +78,9 @@ public class PostDto {
             this.createdAt = post.getCreatedAt();
             this.views = post.getViews();
             this.Images = post.getImages();
+            this.likes = post.getLikes().stream()
+                    .map(like -> new LikeDto.Response(like.getLikeId(), like.getPost().getPostId(), like.getMember().getId()))
+                    .collect(Collectors.toList());
             if (post instanceof Notice notice) {
                 this.category = notice.getCategory();
                 this.isNotice = notice.isNotice();

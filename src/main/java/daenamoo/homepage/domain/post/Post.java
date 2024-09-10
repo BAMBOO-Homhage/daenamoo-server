@@ -2,6 +2,7 @@ package daenamoo.homepage.domain.post;
 
 
 import daenamoo.homepage.domain.Comment;
+import daenamoo.homepage.domain.Like;
 import daenamoo.homepage.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,10 @@ public abstract class Post{
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("commentId asc") // 댓글 정렬
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OrderBy("likeId asc")
+    private List<Like> likes;
 
     private List<String> images;
 
