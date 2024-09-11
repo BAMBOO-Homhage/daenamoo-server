@@ -2,12 +2,15 @@ package daenamoo.homepage.service;
 
 import daenamoo.homepage.domain.Member;
 import daenamoo.homepage.domain.Study;
+import daenamoo.homepage.dto.request.CreateMemberRequestDto;
 import daenamoo.homepage.repository.MemberRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,26 +20,34 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-//@Transactional
-//public class MemberServiceTest {
-//
-//    @Autowired MemberService memberService;
-//    @Autowired
-//    MemberRepository memberRepository;
-//    @Autowired StudyService studyService;
-//
-//    @Test
-//    public void 회원가입() throws Exception {
-//        //given
-//        Member member = new Member();
-//        //when
-//        Long id = memberService.join(member);
-//        //then
-//        Assertions.assertEquals(member, memberRepository.findById(id).get());
-//    }
-//
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Transactional
+public class MemberServiceTest {
+
+    @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
+    @Autowired StudyService studyService;
+    @Autowired PasswordEncoder passwordEncoder;
+
+    @Test
+    public void 회원가입() throws Exception {
+        //given
+        CreateMemberRequestDto dto = new CreateMemberRequestDto(
+                "202010000",
+                "kim",
+                "password",
+                "휴먼",
+                "123@g.com",
+                "000-000"
+        );
+        //when
+        Member member = dto.toEntity(passwordEncoder);
+        Long id = memberService.join(dto);
+        //then
+        Assertions.assertEquals(member.getStudentId(), memberRepository.findById(id).get().getStudentId());
+    }
+
 //    @Test(expected = IllegalStateException.class)
 //    public void 중복_회원_예외() throws Exception {
 //        //given
@@ -90,4 +101,4 @@ import static org.junit.jupiter.api.Assertions.*;
 //
 //        Assertions.assertEquals(expected, actual);
 //    }
-//}
+}
