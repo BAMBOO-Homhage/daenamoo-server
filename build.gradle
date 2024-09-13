@@ -7,6 +7,11 @@ plugins {
 group = 'daenamoo'
 version = '0.0.1-SNAPSHOT'
 
+// docker 설정에서 jar 파일이 2개 생성돼도 에러 안 나게
+jar {
+	enabled = false
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)

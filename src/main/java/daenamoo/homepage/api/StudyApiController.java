@@ -75,11 +75,17 @@ public class StudyApiController {
             @PathVariable("studyId") Long studyId,
             @PathVariable("memberId") Long memberId
     ) {
-        Long memberStudyId = studyService.addMember(studyId, memberId);
-        if (memberStudyId == null) {
-            return ResponseEntity.ok("회원 정보가 없습니다. 회원 추가에 실패했습니다.");
+        try{
+            Long memberStudyId = studyService.addMember(studyId, memberId);
+            if (memberStudyId == null) {
+                return ResponseEntity.ok("회원 정보가 없습니다. 회원 추가에 실패했습니다.");
+            }
+            return ResponseEntity.ok("회원 추가에 성공했습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 추가에 실패했습니다.");
         }
-        return ResponseEntity.ok("회원 추가에 성공했습니다.");
     }
 
     //스터디에 소속된 멤버 조회 API
