@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreateStudyRequestDto {
 
     @NotBlank(message = "[ERROR] 스터디명 입력은 필수 입니다.")
